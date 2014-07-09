@@ -11,7 +11,7 @@ import String
 
 import ElmTest.Run as Run
 import ElmTest.Test (..)
-import ElmTest.Runner.String as String
+import ElmTest.Runner.String as StringRunner
 
 -- Given a result, render it in plainText and return a pass/fail color
 pretty : (String, Run.Result) -> Element
@@ -31,7 +31,7 @@ indent s = let trimmed = String.trimLeft s
 {-| Runs a list of tests and renders the results as an Element -}
 runDisplay : Test -> Element
 runDisplay tests =
-    let ((summary, allPassed) :: results) = String.run tests
+    let ((summary, allPassed) :: results) = StringRunner.run tests
         results' = map pretty results
         maxWidth = maximum . map widthOf <| results'
         maxHeight = maximum . map heightOf <| results'
