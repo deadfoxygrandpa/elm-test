@@ -11,6 +11,9 @@
       , "ElmTest.Runner.Element"
       , "ElmTest.Runner.String"
       ]
+, "native-modules" :
+    [ "Native.Runner"
+    ]
 , "elm-version": "0.12.3"
 , "dependencies": {}
 }
