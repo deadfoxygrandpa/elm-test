@@ -7,8 +7,8 @@ import ElmTest.Runner.String  as String
 
 import Native.Runner
 
---prettyOut : String
-prettyOut = Native.Runner.run <| Run.Report "Hello!" {results = [], passes = [], failures = []}
+prettyOut : a -> Run.Result
+prettyOut = Native.Runner.run <| Test.passingTest
 
 uglyOut : String
 uglyOut = String.runDisplay Test.suite2
