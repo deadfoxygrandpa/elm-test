@@ -7,8 +7,8 @@ import ElmTest.Runner.String  as String
 
 import Native.Runner
 
-prettyOut : a -> Run.Result
-prettyOut = Native.Runner.run <| Test.suite
+--prettyOut : a -> Run.Result
+--prettyOut = Native.Runner.run <| Test.suite
 
 uglyOut : String
 uglyOut = String.runDisplay Test.suite2
@@ -25,6 +25,7 @@ uglyOut' = String.runDisplay Test.suite3
 --                 , asText prettyOut
 --                 ]
 
-sig = (Native.Runner.sig Test.suite3)
+run : Signal Run.Result
+run = (Native.Runner.run Test.suite3)
 
-main = (\x y -> flow down [asText x, asText y]) <~ sig ~ (count sig)
+main = (\x y -> flow down [asText x, asText y]) <~ run ~ (count run)

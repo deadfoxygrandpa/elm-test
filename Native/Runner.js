@@ -10,24 +10,7 @@ Elm.Native.Runner.make = function(elm) {
     ElmTest.Run  = Elm.ElmTest.Run.make(elm);
     ElmTest.Test = Elm.ElmTest.Test.make(elm);
 
-    function run(a) {
-        var b = {
-            ctor: "Report",
-             _0: "Hello!",
-            _1: {
-                _: {},
-                failures: {ctor: "[]"},
-                passes: {ctor: "[]"},
-                results: {ctor: "[]"}
-            }
-        };
-        console.log(a);
-        console.log(ElmTest.Run.run(a));
-        console.log(b);
-        return b;
-    }
-
-    function sig(suite) {
+    function run(suite) {
         if (suite.ctor == "TestCase") {
             suite = ElmTest
         }
@@ -45,8 +28,7 @@ Elm.Native.Runner.make = function(elm) {
     }
 
     return elm.Native.Runner.values = {
-        run : run,
-        sig : sig
+        run : run
     };
 
 };

@@ -13,6 +13,11 @@ import ElmTest.Run as Run
 import ElmTest.Test (..)
 import ElmTest.Runner.String as StringRunner
 
+import Native.Runner
+
+run : Test -> Signal Run.Result
+run = Native.Runner.run
+
 -- Given a result, render it in plainText and return a pass/fail color
 pretty : (String, Run.Result) -> Element
 pretty (s, result) =
@@ -29,10 +34,18 @@ indent s = let trimmed = String.trimLeft s
            in  String.length s - String.length trimmed
 
 {-| Runs a list of tests and renders the results as an Element -}
-runDisplay : Test -> Element
+runDisplay : Test -> Signal Element
 runDisplay tests =
-    let ((summary, allPassed) :: results) = StringRunner.run tests
-        results' = map pretty results
+    let stringSignal = StringRunner.buildString <~ (run tests)
+        extracted = extract <~ stringSignal
+    in  display <~ extracted
+
+extract : [(String, Run.Result)] -> (String, Run.Result, [(String, Run.Result)])
+extract ((summary, allPassed) :: results) = (summary, allPassed, results)
+
+display : (String, Run.Result, [(String, Run.Result)]) -> Element
+display (summary, allPassed, results) =
+    let results' = map pretty results
         maxWidth = maximum . map widthOf <| results'
         maxHeight = maximum . map heightOf <| results'
         elements = if results == [("", allPassed)]

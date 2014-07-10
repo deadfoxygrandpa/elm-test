@@ -1,4 +1,4 @@
-module ElmTest.Runner.String (runDisplay, run) where
+module ElmTest.Runner.String (runDisplay, run, buildString) where
 
 {-| Run a test suite and display it as a string.
 
@@ -43,15 +43,18 @@ pretty n result =
 run : Test -> [(String, Run.Result)]
 run t =
     let result = Run.run t
-        tests = case t of
-                    TestCase n a -> [TestCase n a]
-                    Suite n ts -> ts
-        passedTests'  = Run.passedTests result
+    in  buildString result
+
+buildString : Run.Result -> [(String, Run.Result)]
+buildString result =
+    let passedTests'  = Run.passedTests result
         passedSuites' = Run.passedSuites result
         failedTests'  = Run.failedTests result
         failedSuites' = Run.failedSuites result
+        totalTests    = Run.numberOfTests result
+        totalSuites   = Run.numberOfSuites result
         summary = vcat . map (indent 2) <| [
-                    show (numberOfSuites t) ++ " suites run, containing " ++ show (numberOfTests t) ++ " tests"
+                    show totalSuites ++ " suites run, containing " ++ show totalTests ++ " tests"
                   , if failedTests' == 0
                     then "All tests passed"
                     else show passedSuites' ++ " suites and " ++ show passedTests' ++ " tests passed"

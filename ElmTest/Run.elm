@@ -75,6 +75,11 @@ failedTests result = case result of
                         Fail _ _   -> 1
                         Report n r -> sum . map failedTests <| r.results
 
+numberOfTests : Result -> Int
+numberOfTests result = case result of
+                        Report _ r -> sum . map numberOfTests <| r.results
+                        _          -> 1
+
 passedSuites : Result -> Int
 passedSuites result = case result of
                         Report n r -> let passed = if length r.failures == 0
@@ -90,3 +95,8 @@ failedSuites result = case result of
                                                    else 0
                                       in  failed + (sum . map failedSuites <| r.results)
                         _ -> 0
+
+numberOfSuites : Result -> Int
+numberOfSuites result = case result of
+                        Report _ r -> 1 + (sum . map numberOfSuites <| r.results)
+                        _          -> 0
