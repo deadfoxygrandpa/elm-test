@@ -25,6 +25,6 @@ uglyOut' = String.runDisplay Test.suite3
 --                 , asText prettyOut
 --                 ]
 
-sig = (Native.Runner.sig Test.suite)
+sig = (Native.Runner.sig Test.suite3)
 
-main = (\x y -> flow down [asText <| Run.report "" x, asText y]) <~ sig ~ (count sig)
+main = (\x y -> flow down [asText x, asText y]) <~ sig ~ (count sig)
