@@ -37,6 +37,21 @@ run test =
                                            , failures = fails
                                            }
 
+report : String -> [Result] -> Result
+report name results =
+    let r = Report name {results = [], passes = [], failures = []}
+        add result ((Report n r') as report') = case result of
+                                                  Report _ x -> foldl add report' x.results
+                                                  Pass _     -> Report n { results = r'.results ++ [result]
+                                                                         , passes = r'.passes ++ [result]
+                                                                         , failures = r'.failures
+                                                                         }
+                                                  Fail _ _   -> Report n { results = r'.results ++ [result]
+                                                                         , passes = r'.passes
+                                                                         , failures = r'.failures ++ [result]
+                                                                         }
+    in  foldl add r results
+
 {-| Transform a Result into a Bool. True if the result represents a pass, otherwise False -}
 pass : Result -> Bool
 pass m = case m of
