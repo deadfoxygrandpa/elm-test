@@ -16,11 +16,13 @@ uglyOut = String.runDisplay Test.suite2
 uglyOut' : String
 uglyOut' = String.runDisplay Test.suite3
 
-main : Element
-main = flow down [ plainText "All tests in this suite will pass:\n\n"
-                 , plainText uglyOut
-                 , plainText "\nThis suite has a failing test:\n\n"
-                 , plainText uglyOut'
-                 , plainText "\nThe Element runner:\n\n"
-                 , asText prettyOut
-                 ]
+--main : Element
+--main = flow down [ plainText "All tests in this suite will pass:\n\n"
+--                 , plainText uglyOut
+--                 , plainText "\nThis suite has a failing test:\n\n"
+--                 , plainText uglyOut'
+--                 , plainText "\nThe Element runner:\n\n"
+--                 , asText prettyOut
+--                 ]
+
+main = asText <~ (Native.Runner.sig 5)
