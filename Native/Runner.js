@@ -5,6 +5,7 @@ Elm.Native.Runner.make = function(elm) {
     if (elm.Native.Runner.values) return elm.Native.Runner.values;
 
     var Signal  = Elm.Signal.make(elm);
+    var List    = Elm.Native.List.make(elm);
     var ElmTest = ElmTest || {};
     ElmTest.Run = Elm.ElmTest.Run.make(elm);
 
@@ -23,11 +24,18 @@ Elm.Native.Runner.make = function(elm) {
                         return b;
     }
 
-    function sig(n) {
-        var steps = Signal.constant(0);
-        setInterval(function() {
-            elm.notify(steps.id, Math.random());
-        }, 1000);
+    function sig(xs) {
+        var ns = List.toArray(xs);
+        var ys = [];
+        var steps = Signal.constant(List.fromArray(ys));
+
+        for (var i = 0; i < ns.length; i++) {
+            ys = ys.concat([ns[i]]);
+            setTimeout(function(zs, t) { console.log(zs); setTimeout(function() { elm.notify(steps.id, List.fromArray(zs)); }, t * 1000); }(ys, i), 1000);
+        };
+        // setTimeout(function() {
+        //     elm.notify(steps.id, Math.random());
+        // }, );
         return steps;
     }
 
