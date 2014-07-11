@@ -18,6 +18,10 @@ data Result = Pass String
                             , failures : [Result]
                             }
 
+
+emptyReport : String -> Result
+emptyReport name = Report name {results = [], passes = [], failures = []}
+
 {-| Run a test and get a Result -}
 run : Test -> Result
 run test =
@@ -37,10 +41,9 @@ run test =
                                            , failures = fails
                                            }
 
-report : String -> [Result] -> Result
-report name results =
-    let r = Report name {results = [], passes = [], failures = []}
-        add result ((Report n r') as report') = case result of
+report : Result -> [Result] -> Result
+report r results =
+    let add result ((Report n r') as report') = case result of
                                                   Report _ x -> foldl add report' x.results
                                                   Pass _     -> Report n { results = r'.results ++ [result]
                                                                          , passes = r'.passes ++ [result]

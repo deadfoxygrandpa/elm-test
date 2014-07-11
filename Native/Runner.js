@@ -12,17 +12,17 @@ Elm.Native.Runner.make = function(elm) {
 
     function run(suite) {
         if (suite.ctor == "TestCase") {
-            suite = ElmTest
+            suite = ElmTest.Test.suite(suite._0)(List.fromArray([suite]));
         }
         var ns = List.toArray(suite._1);
         var ys = [];
-        var report = ElmTest.Run.report(suite._0)(List.fromArray(ys));
+        var report = ElmTest.Run.emptyReport(suite._0);
         var results = Signal.constant(report);
 
         for (var i = 0; i < ns.length; i++) {
             result = ElmTest.Run.run(ns[i]);
             ys = ys.concat([result]);
-            setTimeout(function(zs, t) { console.log(zs); setTimeout(function() { elm.notify(results.id, ElmTest.Run.report(suite._0)(List.fromArray(zs))) }, t * 1000); }(ys, i), 1000);
+            setTimeout(function(zs, t) { console.log(zs); setTimeout(function() { elm.notify(results.id, ElmTest.Run.report(report)(List.fromArray(zs))) }, t * 1000); }(ys, i), 1000);
         };
         return results;
     }
