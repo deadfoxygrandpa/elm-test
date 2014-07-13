@@ -22,7 +22,7 @@ Elm.Native.Runner.make = function(elm) {
         for (var i = 0; i < ns.length; i++) {
             result = ElmTest.Run.run(ns[i]);
             ys = ys.concat([result]);
-            setTimeout(function(zs, t) { console.log(zs); setTimeout(function() { elm.notify(results.id, ElmTest.Run.report(report)(List.fromArray(zs))) }, t * 1000); }(ys, i), 1000);
+            setTimeout(function(zs, t) { console.log(zs); setTimeout(function() { elm.notify(results.id, ElmTest.Run.foldReport(report)(List.fromArray(zs))) }, t * 1000); }(ys, i), 1000);
         };
         return results;
     }

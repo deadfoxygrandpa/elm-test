@@ -41,19 +41,16 @@ run test =
                                            , failures = fails
                                            }
 
-report : Result -> [Result] -> Result
-report r results =
-    let add result ((Report n r') as report') = case result of
-                                                  Report _ x -> foldl add report' x.results
-                                                  Pass _     -> Report n { results = r'.results ++ [result]
-                                                                         , passes = r'.passes ++ [result]
-                                                                         , failures = r'.failures
-                                                                         }
-                                                  Fail _ _   -> Report n { results = r'.results ++ [result]
-                                                                         , passes = r'.passes
-                                                                         , failures = r'.failures ++ [result]
-                                                                         }
-    in  foldl add r results
+addToReport : Result -> Result -> Result
+addToReport (Report name r) result = case result of
+                              Pass _      -> Report name {r| passes <- r.passes ++ [result], results <- r.results ++ [result]}
+                              Fail _ _    -> Report name {r| failures <- r.failures ++ [result], results <- r.results ++ [result]}
+                              Report _ r' -> if pass result
+                                             then Report name {r| passes <- r.passes ++ [result], results <- r.results ++ [result]}
+                                             else Report name {r| failures <- r.failures ++ [result], results <- r.results ++ [result]}
+
+foldReport : Result -> [Result] -> Result
+foldReport baseReport results = foldl addToReport baseReport results
 
 {-| Transform a Result into a Bool. True if the result represents a pass, otherwise False -}
 pass : Result -> Bool
