@@ -6,7 +6,8 @@ import ElmTest.Runner.Element as Element
 import ElmTest.Runner.String  as String
 
 prettyOut : Signal Element
-prettyOut = Element.runDisplay Test.suite3
+prettyOut = let x = Element.runDisplay Test.suite3
+            in  (\y n -> flow down [asText n, y]) <~ x ~ (count x)
 
 uglyOut : String
 uglyOut = String.runDisplay Test.suite2

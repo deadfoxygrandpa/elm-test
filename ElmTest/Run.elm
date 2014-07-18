@@ -41,13 +41,33 @@ run test =
                                            , failures = fails
                                            }
 
+runOne : Test -> (Result, Maybe Test)
+runOne test =
+    case test of
+        TestCase _ _     -> (run test, Nothing)
+        Suite name tests -> case tests of
+                                []      -> (run test, Nothing) -- Returns an empty Report
+                                [t]     -> let (result, test') = runOne t
+                                           in  ( Report name { results  = [result]
+                                                             , passes   = if pass result then [result] else []
+                                                             , failures = if fail result then [result] else []
+                                                             }
+                                               , test')
+                                (t::ts) -> let (result, test') = runOne t
+                                           in ( Report name { results  = [result]
+                                                             , passes   = if pass result then [result] else []
+                                                             , failures = if fail result then [result] else []
+                                                             }
+                                               , if test' == Nothing then Just (Suite name ts) else test')
+
 addToReport : Result -> Result -> Result
-addToReport (Report name r) result = case result of
-                              Pass _      -> Report name {r| passes <- r.passes ++ [result], results <- r.results ++ [result]}
-                              Fail _ _    -> Report name {r| failures <- r.failures ++ [result], results <- r.results ++ [result]}
-                              Report _ r' -> if pass result
-                                             then Report name {r| passes <- r.passes ++ [result], results <- r.results ++ [result]}
-                                             else Report name {r| failures <- r.failures ++ [result], results <- r.results ++ [result]}
+addToReport result (Report name r) =
+    case result of
+        Pass _      -> Report name {r| passes <- r.passes ++ [result], results <- r.results ++ [result]}
+        Fail _ _    -> Report name {r| failures <- r.failures ++ [result], results <- r.results ++ [result]}
+        Report _ r' -> if pass result
+                          then Report name {r| passes <- r.passes ++ [result], results <- r.results ++ [result]}
+                          else Report name {r| failures <- r.failures ++ [result], results <- r.results ++ [result]}
 
 foldReport : Result -> [Result] -> Result
 foldReport baseReport results = foldl addToReport baseReport results
