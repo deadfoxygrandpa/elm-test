@@ -8,6 +8,8 @@ the output, instead look at the ```runDisplay``` series in ElmTest.Runner
 
 -}
 
+import Maybe
+
 import ElmTest.Assertion (..)
 import ElmTest.Test (..)
 
@@ -54,11 +56,12 @@ runOne test =
                                                              }
                                                , test')
                                 (t::ts) -> let (result, test') = runOne t
+                                               fromJust m = head . Maybe.justs <| [m]
                                            in ( Report name { results  = [result]
                                                              , passes   = if pass result then [result] else []
                                                              , failures = if fail result then [result] else []
                                                              }
-                                               , if test' == Nothing then Just (Suite name ts) else test')
+                                               , if test' == Nothing then Just (Suite name ts) else Just . Suite name <| (fromJust test') :: ts)
 
 addToReport : Result -> Result -> Result
 addToReport result (Report name r) =
