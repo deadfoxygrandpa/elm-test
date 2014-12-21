@@ -10,6 +10,7 @@ the output, instead look at the ```runDisplay``` series in ElmTest.Runner
 
 import ElmTest.Assertion (..)
 import ElmTest.Test (..)
+import Native.ElmTestRunner
 import List
 
 type Result = Pass String
@@ -19,18 +20,20 @@ type Result = Pass String
                             , failures : List Result
                             }
 
+--runAssertion : (() -> Bool) -> String -> Result
+runAssertion t name m = if Native.ElmTestRunner.runAssertion t
+                        then Pass name
+                        else Fail name m
+
 {-| Run a test and get a Result -}
 run : Test -> Result
 run test =
     case test of
-        TestCase name assertion -> let runAssertion t m = if t ()
-                                                          then Pass name
-                                                          else Fail name m
-                                in case assertion of
-                                     AssertEqual t a b    -> runAssertion t <| "Expected: " ++ a ++ "; got: " ++ b
-                                     AssertNotEqual t a b -> runAssertion t <| a ++ " equals " ++ b
-                                     AssertTrue  t        -> runAssertion t <| "not True"
-                                     AssertFalse t        -> runAssertion t <| "not False"
+        TestCase name assertion -> case assertion of
+                                     AssertEqual t a b    -> runAssertion t name <| "Expected: " ++ a ++ "; got: " ++ b
+                                     AssertNotEqual t a b -> runAssertion t name <| a ++ " equals " ++ b
+                                     AssertTrue  t        -> runAssertion t name <| "not True"
+                                     AssertFalse t        -> runAssertion t name <| "not False"
         Suite name tests -> let results = List.map run tests
                                 (passes, fails) = List.partition pass results
                             in Report name { results  = results

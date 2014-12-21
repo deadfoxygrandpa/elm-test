@@ -5,6 +5,9 @@ import ElmTest.Run as Run
 import ElmTest.Runner.Element as Element
 import ElmTest.Runner.String  as String
 
+import Graphics.Element (..)
+import Text (plainText)
+
 prettyOut : Element
 prettyOut = Element.runDisplay Test.suite3
 
