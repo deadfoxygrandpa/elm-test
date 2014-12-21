@@ -41,8 +41,8 @@ test name a = TestCase name a
 defaultTest : Assertion -> Test
 defaultTest a =
     let name = case a of
-                 --AssertTrue _ -> "True"
-                 --AssertTrue _ -> "False"
+                 AssertTrue _ -> "True"
+                 AssertFalse _ -> "False"
                  AssertEqual _ a b    -> makeName a ++ " == " ++ makeName b
                  AssertNotEqual _ a b -> makeName a ++ " /= " ++ makeName b
     in test name a

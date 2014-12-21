@@ -23,25 +23,20 @@ type Result = Pass String
 
 runTest : Test -> Result
 runTest (TestCase name assertion) =
-    case assertion of
-        AssertEqual t a b    -> let (result, message) = Native.ElmTestRunner.runAssertEqual t a b
-                                in  if result
-                                       then Pass name
-                                       else Fail name message
-        AssertNotEqual t a b -> let (result, message) = Native.ElmTestRunner.runAssertNotEqual t a b
-                                in  if result
-                                       then Pass name
-                                       else Fail name message
+    let handle (result, message) = if result
+                                    then Pass name
+                                    else Fail name message
+    in case assertion of
+        AssertEqual t a b    -> handle <| Native.ElmTestRunner.runAssertEqual t a b
+        AssertNotEqual t a b -> handle <| Native.ElmTestRunner.runAssertNotEqual t a b
+        AssertTrue t         -> handle <| Native.ElmTestRunner.runAssertionTrue t
+        AssertFalse t        -> handle <| Native.ElmTestRunner.runAssertionFalse t
 
 {-| Run a test and get a Result -}
 run : Test -> Result
 run test =
     case test of
         TestCase name assertion -> runTest test
-                                     --AssertEqual t a b    -> runAssertion t a b name
-                                     --AssertNotEqual t a b -> runAssertion t name <| a ++ " equals " ++ b
-                                     --AssertTrue  t        -> runAssertion t name
-                                     --AssertFalse t        -> runAssertion t name <| "not False"
         Suite name tests -> let results = List.map run tests
                                 (passes, fails) = List.partition pass results
                             in Report name { results  = results

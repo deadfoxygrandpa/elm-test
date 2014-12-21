@@ -30,6 +30,28 @@ Elm.Native.ElmTestRunner.make = function(elm) {
         return Utils.Tuple2(result, msg);
     }
 
+    function runAssertTrue(assertion) {
+        try {
+            var result = assertion(Utils.Tuple0);
+            var msg = "not True";
+        } catch (e) {
+            var result = false;
+            var msg = e.toString();
+        }
+        return Utils.Tuple2(result, msg);
+    }
+
+    function runAssertFalse(assertion) {
+        try {
+            var result = assertion(Utils.Tuple0);
+            var msg = "not False";
+        } catch (e) {
+            var result = false;
+            var msg = e.toString();
+        }
+        return Utils.Tuple2(result, msg);
+    }
+
     function name(a) {
         try {
             var aString = a(Utils.Tuple0);
@@ -42,6 +64,8 @@ Elm.Native.ElmTestRunner.make = function(elm) {
     return elm.Native.ElmTestRunner.values = {
         runAssertEqual : F3(runAssertEqual),
         runAssertNotEqual : F3(runAssertNotEqual),
+        runAssertTrue : runAssertTrue,
+        runAssertFalse : runAssertFalse,
         name : name
     };
 
