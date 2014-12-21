@@ -21,16 +21,18 @@ type Result = Pass String
                             }
 
 --runAssertion : (() -> Bool) -> String -> Result
-runAssertion t name m = if Native.ElmTestRunner.runAssertion t
-                        then Pass name
-                        else Fail name m
+runAssertion t a b name =
+    let (result, message) = Native.ElmTestRunner.runAssertion t a b
+    in  if result
+        then Pass name
+        else Fail name message
 
 {-| Run a test and get a Result -}
 run : Test -> Result
 run test =
     case test of
         TestCase name assertion -> case assertion of
-                                     AssertEqual t a b    -> runAssertion t name <| "Expected: " ++ "a" ++ "; got: " ++ "b"
+                                     AssertEqual t a b    -> runAssertion t a b name
                                      --AssertNotEqual t a b -> runAssertion t name <| a ++ " equals " ++ b
                                      --AssertTrue  t        -> runAssertion t name <| "not True"
                                      --AssertFalse t        -> runAssertion t name <| "not False"
