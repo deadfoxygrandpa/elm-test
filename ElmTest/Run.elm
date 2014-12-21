@@ -30,10 +30,10 @@ run : Test -> Result
 run test =
     case test of
         TestCase name assertion -> case assertion of
-                                     AssertEqual t a b    -> runAssertion t name <| "Expected: " ++ a ++ "; got: " ++ b
-                                     AssertNotEqual t a b -> runAssertion t name <| a ++ " equals " ++ b
-                                     AssertTrue  t        -> runAssertion t name <| "not True"
-                                     AssertFalse t        -> runAssertion t name <| "not False"
+                                     AssertEqual t a b    -> runAssertion t name <| "Expected: " ++ "a" ++ "; got: " ++ "b"
+                                     --AssertNotEqual t a b -> runAssertion t name <| a ++ " equals " ++ b
+                                     --AssertTrue  t        -> runAssertion t name <| "not True"
+                                     --AssertFalse t        -> runAssertion t name <| "not False"
         Suite name tests -> let results = List.map run tests
                                 (passes, fails) = List.partition pass results
                             in Report name { results  = results
