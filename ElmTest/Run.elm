@@ -11,6 +11,7 @@ the output, instead look at the ```runDisplay``` series in ElmTest.Runner
 import ElmTest.Assertion (..)
 import ElmTest.Test (..)
 import Native.ElmTestRunner
+
 import List
 
 type Result = Pass String
@@ -20,21 +21,26 @@ type Result = Pass String
                             , failures : List Result
                             }
 
---runAssertion : (() -> Bool) -> String -> Result
-runAssertion t a b name =
-    let (result, message) = Native.ElmTestRunner.runAssertion t a b
-    in  if result
-        then Pass name
-        else Fail name message
+runTest : Test -> Result
+runTest (TestCase name assertion) =
+    case assertion of
+        AssertEqual t a b    -> let (result, message) = Native.ElmTestRunner.runAssertEqual t a b
+                                in  if result
+                                       then Pass name
+                                       else Fail name message
+        AssertNotEqual t a b -> let (result, message) = Native.ElmTestRunner.runAssertNotEqual t a b
+                                in  if result
+                                       then Pass name
+                                       else Fail name message
 
 {-| Run a test and get a Result -}
 run : Test -> Result
 run test =
     case test of
-        TestCase name assertion -> case assertion of
-                                     AssertEqual t a b    -> runAssertion t a b name
+        TestCase name assertion -> runTest test
+                                     --AssertEqual t a b    -> runAssertion t a b name
                                      --AssertNotEqual t a b -> runAssertion t name <| a ++ " equals " ++ b
-                                     --AssertTrue  t        -> runAssertion t name <| "not True"
+                                     --AssertTrue  t        -> runAssertion t name
                                      --AssertFalse t        -> runAssertion t name <| "not False"
         Suite name tests -> let results = List.map run tests
                                 (passes, fails) = List.partition pass results

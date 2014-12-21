@@ -9,7 +9,9 @@ module ElmTest.Assertion where
 
 import List
 
-type Assertion = AssertEqual (() -> Bool) (() -> String) (() -> String)
+type Assertion = AssertTrue     (() -> Bool)
+               | AssertEqual    (() -> Bool) (() -> String) (() -> String)
+               | AssertNotEqual (() -> Bool) (() -> String) (() -> String)
 
 --type Assertion = AssertTrue     (() -> Bool)
 --               | AssertFalse    (() -> Bool)
@@ -33,6 +35,6 @@ assertEqual a b = AssertEqual (\_ -> a () == b ()) (\_ -> toString <| a ()) (\_ 
 --assertionList : List a -> List a -> List Assertion
 --assertionList xs ys = List.map2 assertEqual xs ys
 
---{-| Basic function to create an Assert Not Equals assertion. -}
---assertNotEqual : a -> a -> Assertion
---assertNotEqual a b = AssertNotEqual (\_ -> a /= b) (toString a) (toString b)
+{-| Basic function to create an Assert Not Equals assertion. -}
+assertNotEqual : (() -> a) -> (() -> a) -> Assertion
+assertNotEqual a b = AssertNotEqual (\_ -> a () /= b ()) (\_ -> toString <| a ()) (\_ -> toString <| b ())

@@ -44,7 +44,7 @@ defaultTest a =
                  --AssertTrue _ -> "True"
                  --AssertTrue _ -> "False"
                  AssertEqual _ a b    -> makeName a ++ " == " ++ makeName b
-                 --AssertNotEqual _ a b -> a ++ " /= " ++ b
+                 AssertNotEqual _ a b -> makeName a ++ " /= " ++ makeName b
     in test name a
 
 makeName : (() -> String) -> String

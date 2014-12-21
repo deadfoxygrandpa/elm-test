@@ -11,7 +11,7 @@ tests : List Test
 tests = [ (2^3) `equals` 1
         , 3 `equals` 3
         , exceptionTest
-        , defaultTest (assertEqual (\_ -> True) (\_ -> True))
+        , defaultTest (assertNotEqual (\_ -> False) (\_ -> True))
         , defaultTest <| assertEqual (\_ -> 1) (\_ -> List.head [])
         , test "test head" (assertEqual (\_ -> 1) (\_ -> (List.head [1..10])))
         ]
