@@ -8,6 +8,8 @@ module ElmTest.Test where
 -}
 
 import ElmTest.Assertion (..)
+import Native.ElmTestRunner
+
 import List
 
 type Test = TestCase String Assertion | Suite String (List Test)
@@ -41,9 +43,12 @@ defaultTest a =
     let name = case a of
                  --AssertTrue _ -> "True"
                  --AssertTrue _ -> "False"
-                 AssertEqual _ a b    -> "a" ++ " == " ++ "b"
+                 AssertEqual _ a b    -> makeName a ++ " == " ++ makeName b
                  --AssertNotEqual _ a b -> a ++ " /= " ++ b
     in test name a
+
+makeName : (() -> String) -> String
+makeName = Native.ElmTestRunner.name
 
 {-| Convert a list of `Test`s to a `Suite`. Test suites are used to group tests into
 logical units, simplifying the management and running of many tests. The `String` is the

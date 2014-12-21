@@ -19,8 +19,18 @@ Elm.Native.ElmTestRunner.make = function(elm) {
         return Utils.Tuple2(result, msg);
     }
 
+    function name(a) {
+        try {
+            var aString = a(Utils.Tuple0);
+        } catch (e) {
+            var aString = "error";
+        }
+        return aString;
+    }
+
     return elm.Native.ElmTestRunner.values = {
-        runAssertion : F3(runAssertion)
+        runAssertion : F3(runAssertion),
+        name : name
     };
 
 };
