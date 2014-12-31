@@ -26,10 +26,10 @@ assert b = AssertTrue (\_ -> b)
 assertEqual : (() -> a) -> (() -> a) -> Assertion
 assertEqual a b = AssertEqual (\_ -> a () == b ()) (\_ -> toString <| a ()) (\_ -> toString <| b ())
 
---{-| Given a list of values and another list of expected values,
---generate a list of Assert Equal assertions. -}
---assertionList : List a -> List a -> List Assertion
---assertionList xs ys = List.map2 assertEqual xs ys
+{-| Given a list of values and another list of expected values,
+generate a list of Assert Equal assertions. -}
+assertionList : List (() -> a) -> List (() -> a) -> List Assertion
+assertionList xs ys = List.map2 assertEqual xs ys
 
 {-| Basic function to create an Assert Not Equals assertion. -}
 assertNotEqual : (() -> a) -> (() -> a) -> Assertion
