@@ -29,8 +29,8 @@ runTest (TestCase name assertion) =
     in case assertion of
         AssertEqual t a b    -> handle <| Native.ElmTestRunner.runAssertEqual t a b
         AssertNotEqual t a b -> handle <| Native.ElmTestRunner.runAssertNotEqual t a b
-        AssertTrue t         -> handle <| Native.ElmTestRunner.runAssertionTrue t
-        AssertFalse t        -> handle <| Native.ElmTestRunner.runAssertionFalse t
+        AssertTrue t         -> handle <| Native.ElmTestRunner.runAssertTrue t
+        AssertFalse t        -> handle <| Native.ElmTestRunner.runAssertFalse t
 
 {-| Run a test and get a Result -}
 run : Test -> Result
