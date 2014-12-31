@@ -14,8 +14,8 @@ import IO.Runner as Run
 tests : List Test
 tests = [ (R.run (0 `equals` 0)) `equals` (R.Pass "0 == 0")
         , test "pass" <| A.assert (R.pass <| R.Pass "")
-        , test "fail" <| A.assertNotEqual (R.fail <| R.Pass "") True
-        ] ++ (List.map defaultTest <| A.assertionList [1..10] [1..10])
+        , test "fail" <| A.assertNotEqual (\_ -> (R.fail <| R.Pass "")) (\_ -> True)
+        ] ++ (List.map defaultTest <| A.assertionList (List.map (\n -> \_ -> n) [1..10]) (List.map (\n -> \_ -> n) [1..10]))
 
 console = runDisplay <| Suite "All Tests" tests
 
