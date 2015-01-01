@@ -15,12 +15,8 @@ type Assertion = AssertTrue     (() -> Bool)
                | AssertNotEqual (() -> Bool) (() -> String) (() -> String)
 
 {-| Basic function to create an Assert True assertion. Delays execution until tests are run. -}
-assertT : (() -> Bool) -> Assertion
-assertT = AssertTrue
-
-{-| Basic function to create an Assert True assertion. Delays execution until tests are run. -}
-assert : Bool -> Assertion
-assert b = AssertTrue (\_ -> b)
+assert : (() -> Bool) -> Assertion
+assert = AssertTrue
 
 {-| Basic function to create an Assert Equals assertion, the expected value goes on the left. -}
 assertEqual : (() -> a) -> (() -> a) -> Assertion
