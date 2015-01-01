@@ -47,7 +47,7 @@ defaultTest a =
                  AssertNotEqual _ a b -> makeName a ++ " /= " ++ makeName b
     in test name a
 
-makeName : (() -> String) -> String
+makeName : Thunk String -> String
 makeName = Native.ElmTestRunner.name
 
 {-| Convert a list of `Test`s to a `Suite`. Test suites are used to group tests into
