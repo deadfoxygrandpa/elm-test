@@ -30,8 +30,8 @@ numberOfSuites test = case test of
                         Suite    _ ts -> 1 + (List.sum << List.map numberOfSuites <| ts)
 
 {-| Convenience function for quickly constructing Assert Equals tests. -}
-equals : a -> a -> Test
-equals a b = defaultTest <| assertEqual (\_ -> a) (\_ -> b)
+equals : Thunk a -> Thunk a -> Test
+equals a b = defaultTest <| assertEqual a b
 
 {-| Basic function to create a Test Case -}
 test : String -> Assertion -> Test

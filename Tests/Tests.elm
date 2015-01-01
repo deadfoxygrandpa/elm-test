@@ -12,7 +12,7 @@ import IO.Runner (Request, Response)
 import IO.Runner as Run
 
 tests : List Test
-tests = [ (R.run (0 `equals` 0)) `equals` (R.Pass "0 == 0")
+tests = [ (\_ -> R.run ((\_ -> 0) `equals` (\_ -> 0))) `equals` (\_ -> R.Pass "0 == 0")
         , test "pass" <| A.assert (R.pass <| R.Pass "")
         , test "fail" <| A.assertNotEqual (\_ -> (R.fail <| R.Pass "")) (\_ -> True)
         ] ++ (List.map defaultTest <| A.assertionList (List.map (\n -> \_ -> n) [1..10]) (List.map (\n -> \_ -> n) [1..10]))
