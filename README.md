@@ -7,16 +7,16 @@ A unit testing framework for Elm
 
 Creating a test case is very simple. You only need a name and an assertion:
 ```haskell
-myTest = test "Example Test" (assert True)
+myTest = test "Example Test" <| assert (\_ -> True)
 ```
 For convenience, there is a function to create a name for you based on the inputs:
 ```haskell
 -- Test name will be "5 == 5"
-myTest = defaultTest (assertEqual 5 5)
+myTest = defaultTest (assertEqual (\_ -> 5) (\_ -> 5))
 ```
 As well as a function to create an assertEqual tests, again deriving a name based on the inputs:
 ```haskell
-myTest = 5 `equals` 5
+myTest = (\_ -> 5) `equals` (\_ -> 5)
 ```
 There are four different types of assertions:
 ```haskell
@@ -27,17 +27,17 @@ AssertNotEqual
 ```
 As well as functions for making these assertions:
 ```haskell
-assert : Bool -> Assertion
-assertEqual : a -> a -> Assertion
-assertNotEqual : a -> a -> Assertion
-assertionList : [a] -> [a] -> [Assertion]
+assert : Thunk Bool -> Assertion
+assertEqual : Thunk a -> Thunk a -> Assertion
+assertNotEqual : Thunk a -> Thunk a -> Assertion
+assertionList : List (Thunk a) -> List (Thunk a) -> List Assertion
 ```
 Example usage of these functions might be:
 ```haskell
-assert        (a > 5)             -- Returns an AssertTrue assertion
-assertEqual    a b                -- Returns an AssertEqual assertion
-assertNotEqual a b                -- Returns an AssertNotEqual assertion
-assertionList [a, b, c] [d, e, f] -- Shorthand for [assertEqual a d, assertEqual b e, assertEqual c f]
+assert         (\_ -> (a > 5))                                         -- Returns an AssertTrue assertion
+assertEqual    (\_ -> a) (\_ -> b)                                     -- Returns an AssertEqual assertion
+assertNotEqual (\_ -> a) (\_ -> b)                                     -- Returns an AssertNotEqual assertion
+assertionList  [\_ -> a, \_ -> b, \_ -> c] [\_ -> d, \_ -> e, \_ -> f] -- Shorthand for [assertEqual (\_ -> a) (\_ -> d), assertEqual (\_ -> b) (\_ -> e), assertEqual (\_ -> c) (\_ -> f)]
 ```
 
 ## Grouping Tests
@@ -59,7 +59,7 @@ the tests or subsuites contained in a suite. All results contain the name of the
 The most basic way to run a test is the `run` function, which has the type signature `Test -> Result`. A test suite can also be run all at once, again with the `run` function.
 
 A `Report` is of type `{results : [Result], passes : [Result], failures : [Result]}`.
-There is no built-in way to display results, but there are functions for running tests and immediately seeing the results. 
+There is no built-in way to display results, but there are functions for running tests and immediately seeing the results.
 
 ## Displaying Results
 
@@ -177,7 +177,7 @@ install:
   - curl https://raw.githubusercontent.com/maxsnew/IO/master/elm-io.sh > elm-io.sh
   - npm install jsdom
   - elm-package install -y
-before_script: 
+before_script:
   - elm-make --yes --output raw-test.js Tests/Tests.elm
   - bash elm-io.sh raw-test.js test.js
 script: node test.js
