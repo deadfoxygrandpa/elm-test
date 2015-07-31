@@ -71,6 +71,7 @@ import String
 import ElmTest.Test exposing (test, Test, suite)
 import ElmTest.Assertion exposing (assert, assertEqual)
 import ElmTest.Runner.Element exposing (runDisplay)
+import Graphics.Element exposing (Element)
 
 tests : Test
 tests = suite "A Test Suite"
