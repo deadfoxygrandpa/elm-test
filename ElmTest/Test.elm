@@ -1,15 +1,16 @@
-module ElmTest.Test where
+module ElmTest.Test(Test(..), test, equals, defaultTest, suite, numberOfTests, numberOfSuites) where
 
 {-| The units of a test suite, named tests.
 
 # Test
-@docs test, equals, defaultTest, suite
+@docs test, equals, defaultTest, suite, numberOfTests, numberOfSuites, Test
 
 -}
 
 import ElmTest.Assertion exposing (..)
 import List
 
+{-| A test may be one case or a suite of cases -}
 type Test = TestCase String Assertion | Suite String (List Test)
 
 nameOf : Test -> String
@@ -17,11 +18,13 @@ nameOf test = case test of
                 TestCase n _ -> n
                 Suite    n _ -> n
 
+{-| Count all the cases within one Test -}
 numberOfTests : Test -> Int
 numberOfTests test = case test of
                         TestCase _ _  -> 1
                         Suite    _ ts -> List.sum << List.map numberOfTests <| ts
 
+{-| Count the suites within one Test -}
 numberOfSuites : Test -> Int
 numberOfSuites test = case test of
                         TestCase _ _  -> 0
