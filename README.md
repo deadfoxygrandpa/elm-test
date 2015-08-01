@@ -144,7 +144,7 @@ Then download the `elm-io.sh` script and `jsdom` to run it:
 ```bash
 $ npm install jsdom
 ...
-$ curl https://raw.githubusercontent.com/maxsnew/IO/master/elm-io.sh > elm-io.sh
+$ curl https://raw.githubusercontent.com/maxsnew/IO/1.0.1/elm-io.sh > elm-io.sh
 $ elm-make Example.elm --output raw-test.js
 $ bash elm-io.sh raw-test.js test.js
 $ node test.js
@@ -175,7 +175,7 @@ language: haskell
 install:
   - cabal install elm-make
   - cabal install elm-package
-  - curl https://raw.githubusercontent.com/maxsnew/IO/master/elm-io.sh > elm-io.sh
+  - curl https://raw.githubusercontent.com/maxsnew/IO/1.0.1/elm-io.sh > elm-io.sh
   - npm install jsdom
   - elm-package install -y
 before_script: 
