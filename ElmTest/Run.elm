@@ -1,10 +1,10 @@
-module ElmTest.Run where
+module ElmTest.Run(Result(..), run, pass, fail, failedSuites, passedSuites, failedTests, passedTests) where
 
 {-| Basic utilities for running tests and customizing the output. If you don't care about customizing
 the output, instead look at the ```runDisplay``` series in ElmTest.Runner
 
 # Run
-@docs run, pass, fail
+@docs run, pass, fail, Result, failedSuites, passedSuites, failedTests, passedTests
 
 -}
 
@@ -12,6 +12,7 @@ import ElmTest.Assertion exposing (..)
 import ElmTest.Test exposing (..)
 import List
 
+{-| A test can result in a single pass, a single fail, or a bunch of these -}
 type Result = Pass String
             | Fail String String
             | Report String { results  : List Result
@@ -49,18 +50,21 @@ pass m = case m of
 fail : Result -> Bool
 fail = not << pass
 
+{-| Count of passed tests within a Result -}
 passedTests : Result -> Int
 passedTests result = case result of
                         Pass _     -> 1
                         Fail _ _   -> 0
                         Report n r -> List.sum << List.map passedTests <| r.results
 
+{-| Count of failed tests within a Result -}
 failedTests : Result -> Int
 failedTests result = case result of
                         Pass _     -> 0
                         Fail _ _   -> 1
                         Report n r -> List.sum << List.map failedTests <| r.results
 
+{-| Count of passed suites within a Result -}
 passedSuites : Result -> Int
 passedSuites result = case result of
                         Report n r -> let passed = if List.length r.failures == 0
@@ -69,6 +73,7 @@ passedSuites result = case result of
                                       in  passed + (List.sum << List.map passedSuites <| r.results)
                         _ -> 0
 
+{-| Count the number of failed suites within a Result -}
 failedSuites : Result -> Int
 failedSuites result = case result of
                         Report n r -> let failed = if List.length r.failures > 0
