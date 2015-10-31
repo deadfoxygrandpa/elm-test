@@ -129,7 +129,7 @@ import String
 
 import IO.IO exposing (..)
 import IO.Runner exposing (Request, Response, run)
-import ElmTest.Test exposing (test, Test)
+import ElmTest.Test exposing (suite, test, Test)
 import ElmTest.Assertion exposing (assert, assertEqual)
 import ElmTest.Runner.Console exposing (runDisplay)
 
@@ -143,7 +143,10 @@ tests = suite "A Test Suite"
 port requests : Signal Request
 port requests = run responses (runDisplay tests)
 
-port responses : Signal Responseresults : String
+port responses : Signal Response
+
+port results : String
+port results = ""
 ```
 Then download the `elm-io.sh` script and `jsdom` to run it:
 (On Windows, `jsdom` is somewhat difficult to install. [Refer to this blog post](http://www.steveworkman.com/node-js/2012/installing-jsdom-on-windows/) for detailed instructions)
