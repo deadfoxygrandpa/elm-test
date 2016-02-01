@@ -1,7 +1,4 @@
-module ElmTest.Run
-    ( Result(..), run, pass, fail
-    , failedTests, passedTests, failedSuites, passedSuites
-    ) where
+module ElmTest.Run (Result(..), run, pass, fail, failedTests, passedTests, failedSuites, passedSuites, runOne) where
 
 {-| Basic utilities for running tests and customizing the output. If you don't care about customizing
 the output, instead look at the `runDisplay` series in ElmTest.Runner
@@ -19,20 +16,22 @@ import List
 
 
 type alias Summary =
-    { results  : List Result
-    , passes   : List Result
+    { results : List Result
+    , passes : List Result
     , failures : List Result
     }
 
 
-{-| Test result -}
+{-| Test result
+-}
 type Result
     = Pass String
     | Fail String String
     | Report String Summary
 
 
-{-| Run a test and get a Result -}
+{-| Run a test and get a Result
+-}
 run : Test -> Result
 run test =
     case test of
@@ -41,22 +40,26 @@ run test =
                 runAssertion t m =
                     if t () then
                         Pass name
-
                     else
                         Fail name m
             in
                 case assertion of
                     AssertEqual t a b ->
-                        runAssertion t <|
-                            "Expected: " ++ a ++ "; got: " ++ b
+                        runAssertion t
+                            <| "Expected: "
+                            ++ a
+                            ++ "; got: "
+                            ++ b
 
                     AssertNotEqual t a b ->
-                        runAssertion t <|
-                            a ++ " equals " ++ b
+                        runAssertion t
+                            <| a
+                            ++ " equals "
+                            ++ b
 
-                    AssertTrue  t ->
-                        runAssertion t <|
-                            "not True"
+                    AssertTrue t ->
+                        runAssertion t
+                            <| "not True"
 
                     AssertFalse t ->
                         runAssertion t <| "not False"
@@ -66,17 +69,36 @@ run test =
                 results =
                     List.map run tests
 
-                (passes, fails) =
+                ( passes, fails ) =
                     List.partition pass results
             in
-                Report name
-                    { results  = results
-                    , passes   = passes
+                Report
+                    name
+                    { results = results
+                    , passes = passes
                     , failures = fails
                     }
 
 
-{-| Transform a Result into a Bool. True if the result represents a pass, otherwise False -}
+{-| Run a single test case and return the result and the leftover cases not yet run
+-}
+runOne : Test -> ( Result, Maybe Test )
+runOne test =
+    case test of
+        TestCase _ _ ->
+            ( run test, Nothing )
+
+        Suite name tests ->
+            case tests of
+                [] ->
+                    ( Summary [] [] [] |> Report name, Nothing )
+
+                test :: tests ->
+                    ( run test, Just (Suite name tests) )
+
+
+{-| Transform a Result into a Bool. True if the result represents a pass, otherwise False
+-}
 pass : Result -> Bool
 pass m =
     case m of
@@ -89,18 +111,19 @@ pass m =
         Report _ r ->
             if (List.length (.failures r) > 0) then
                 False
-
             else
                 True
 
 
-{-| Transform a Result into a Bool. True if the result represents a fail, otherwise False -}
+{-| Transform a Result into a Bool. True if the result represents a fail, otherwise False
+-}
 fail : Result -> Bool
 fail =
     not << pass
 
 
-{-| Determine the number of Tests that passed -}
+{-| Determine the number of Tests that passed
+-}
 passedTests : Result -> Int
 passedTests result =
     case result of
@@ -114,7 +137,8 @@ passedTests result =
             List.sum << List.map passedTests <| r.results
 
 
-{-| Determine the number of Tests that failed -}
+{-| Determine the number of Tests that failed
+-}
 failedTests : Result -> Int
 failedTests result =
     case result of
@@ -128,7 +152,8 @@ failedTests result =
             List.sum << List.map failedTests <| r.results
 
 
-{-| Determine the number of Suites that passed -}
+{-| Determine the number of Suites that passed
+-}
 passedSuites : Result -> Int
 passedSuites result =
     case result of
@@ -137,7 +162,6 @@ passedSuites result =
                 passed =
                     if List.length r.failures == 0 then
                         1
-
                     else
                         0
             in
@@ -147,7 +171,8 @@ passedSuites result =
             0
 
 
-{-| Determine the number of Suites that failed -}
+{-| Determine the number of Suites that failed
+-}
 failedSuites : Result -> Int
 failedSuites result =
     case result of
@@ -156,7 +181,6 @@ failedSuites result =
                 failed =
                     if List.length r.failures > 0 then
                         1
-
                     else
                         0
             in
