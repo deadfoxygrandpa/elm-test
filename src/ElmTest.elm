@@ -1,4 +1,4 @@
-module ElmTest (Test, test, defaultTest, equals, suite, Assertion, assert, assertEqual, assertNotEqual, lazyAssert, assertionList, pass, fail, elementRunner, consoleRunner, stringRunner) where
+module ElmTest (Test, test, defaultTest, equals, suite, Assertion, assert, assertEqual, assertNotEqual, lazyAssert, assertionList, pass, fail, elementRunner, consoleRunner, stringRunner, tapRunner) where
 
 {-| A unit testing framework for Elm.
 
@@ -9,7 +9,7 @@ module ElmTest (Test, test, defaultTest, equals, suite, Assertion, assert, asser
 @docs Assertion, assert, assertEqual, assertNotEqual, lazyAssert, assertionList, pass, fail
 
 # Running Tests
-@docs elementRunner, consoleRunner, stringRunner
+@docs elementRunner, consoleRunner, stringRunner, tapRunner
 
 -}
 
@@ -21,6 +21,7 @@ import ElmTest.Run
 import ElmTest.Runner.String
 import ElmTest.Runner.Element
 import ElmTest.Runner.Console
+import ElmTest.Runner.Tap
 
 
 {-| The basic unit of testability.
@@ -147,3 +148,12 @@ probably use either `elementRunner` or `consoleRunner`.
 stringRunner : Test -> String
 stringRunner =
   ElmTest.Runner.String.runDisplay
+
+
+{-| Run a test or a test suite with `laszlopandy/elm-console` and return an
+`IO ()` action which outputs the TAP13 formatted test results to console.
+-}
+tapRunner : Test -> IO ()
+tapRunner =
+  ElmTest.Runner.Tap.runDisplay
+
