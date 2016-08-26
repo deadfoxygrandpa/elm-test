@@ -3,6 +3,8 @@ elm-test [![Build Status](https://travis-ci.org/deadfoxygrandpa/elm-test.png?bra
 
 A unit testing framework for Elm
 
+##  DEPRECATED - Moved to [https://github.com/elm-community/elm-test](https://github.com/elm-community/elm-test)
+
 ## Getting Started
 
 The simplest way to get started with Elm Test is to install & run it via [node-elm-test](https://github.com/rtfeldman/node-elm-test). This package can install Elm Test and its dependencies for you, as well as providing you with a command line test runner and an example test suite.
