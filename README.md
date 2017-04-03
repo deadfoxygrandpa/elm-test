@@ -1,3 +1,5 @@
+## [DEPRECATED] - This repo has moved to [elm-community/elm-test](https://github.com/elm-community/elm-test)
+
 elm-test [![Build Status](https://travis-ci.org/deadfoxygrandpa/elm-test.png?branch=master)](https://travis-ci.org/deadfoxygrandpa/elm-test)
 ========
 
